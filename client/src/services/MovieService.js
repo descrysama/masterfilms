@@ -17,3 +17,11 @@ export const queryFetch = async (query, page) => {
     
 }
 
+export const singleSearch = async (id) => {
+    let response = await axios({
+        method: "get",
+        url: `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.REACT_APP_API_KEY}&language=fr-FR`,
+    });
+    return response;
+}
+

@@ -38,7 +38,7 @@ const Navbar = () => {
         <div onClick={handleNav} className="hover:cursor-pointer block md:hidden">
           {!nav ? <AiOutlineMenu size={25}/> : <AiOutlineClose size={25}/>}
         </div>
-        <div className={nav ? "fixed left-0 top-0 w-[70%] border-r border-r-[#141f36] h-full bg-white ease-in-out duration-300 md:hidden" : 'fixed left-[-100%]'}>
+        <div className={nav ? "fixed left-0 top-0 w-[70%] border-r border-r-[#141f36] h-full z-10 bg-white ease-in-out duration-300 md:hidden" : 'fixed left-[-100%]'}>
           <h1 className='w-full text-3xl font-bold text-[#2a9d8f] m-4'>AIRBNC.</h1>
           <ul className='uppercase flex flex-col justify-center items-left'>
             <Link to="/" className='p-3 m-2 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Accueil</Link>
