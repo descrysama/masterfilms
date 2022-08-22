@@ -22,7 +22,7 @@ const MovieDetail = ({ id }) => {
   return (
     <>
       <Navbar />
-      <div className="mx-auto md:max-w-[1400px] w-full h-auto flex flex-col justify-center items-center md:p-4">
+      <div className="mx-auto md:max-w-[1400px] w-full h-auto flex flex-col justify-center items-center md:p-4 animate__animated animate__fadeIn">
         <div className="md:flex md:flex-row md:items-start md:justify-start flex flex-col justify-center items-center">
             <div className="md:w-1/2 md:max-h-1/2 m-2">
                 <img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/original/${movie.poster_path}`} alt="Sunset in the mountains" className=' ease-in-out duration-300 bg-[#b81e13]'/>

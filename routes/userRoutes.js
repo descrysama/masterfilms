@@ -17,11 +17,6 @@ router.post('/logout', userController.logout)
 
 
 
-router.post('/checktoken', Middle.authToken, function(req, res) {
-    res.json({
-        status: true,
-        message: 'destru mignon'
-    })
-});
+router.post('/checktoken', userController.checkToken);
 
 module.exports = router;

@@ -3,6 +3,30 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
 
+module.exports.checkToken = (req, res) => {
+    const token = req.cookies.jwt ? req.cookies.jwt : null
+    const id = req.cookies.jwt ? jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET) : null;
+    if (token) {
+        if (jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)) {
+            res.json({
+                status: true,
+                message: "Token valide.",
+                id : id
+            })
+        } else {
+            res.json({
+                status: false,
+                message: "Token invalide."
+            })
+        }
+    } else {
+        res.json({
+            status: false,
+            message: "Token non trouvé."
+        })
+    }
+}
+
 module.exports.register = async(req , res) => {
     const { username, email } = req.body
     const password = hashPassword(req.body.password);
