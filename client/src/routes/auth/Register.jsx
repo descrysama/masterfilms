@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 const Register = () => {
 
   const [name, setName] = useState('');
-  const [lastname, setlastname] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -14,7 +14,7 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password && repeatPassword && password === repeatPassword) {
-       userService.Register(name, lastname, email, password).then(response => {
+       userService.Register(username, email, password).then(response => {
         if (response.data.status === true) {
           Swal.fire({
             icon: 'success',
@@ -33,7 +33,7 @@ const Register = () => {
             Swal.fire({
               icon: 'error',
               title: 'Erreur...',
-              text: 'Email déja utilisé veuillez vous connecter.'
+              text: 'Email et/ou Pseudo déja utilisé veuillez vous connecter.'
             })
           }
         }
@@ -50,7 +50,7 @@ const Register = () => {
 
   const resetFields = () => {
     setName('')
-    setlastname('')
+    setUsername('')
     setEmail('')
     setPassword('')
     setRepeatPassword('')
@@ -63,7 +63,7 @@ const Register = () => {
         <form onSubmit={(e) => handleSubmit(e)} className='text-left flex flex-col justify-center items-center w-full'>
             <div className='flex flex-col m-2 w-full'>
                 <label htmlFor="nom" className='text-left mb-2 text-gray-500'>Pseudo :</label>
-                <input className='shadow appearance-none border border-[#238176] rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline' type="text" id="nom" placeholder='Doe' onChange={(e) => setlastname(e.target.value)} value={lastname}/>
+                <input className='shadow appearance-none border border-[#238176] rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline' type="text" id="username" placeholder='Doe' onChange={(e) => setUsername(e.target.value)} value={username}/>
             </div>
           <div className='flex flex-col m-2 w-full'>
             <label htmlFor="email" className='text-left mb-2 text-gray-500'>Email :</label>

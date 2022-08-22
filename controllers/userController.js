@@ -15,10 +15,12 @@ module.exports.register = async(req , res) => {
         })
         if (data) {
             res.json({
-                data: data
+                status: true,
+                message: 'Inscription Réussie'
             })
         } else {
             res.json({
+                status: false,
                 error: 'Champs incorrects'
             })
         }
@@ -46,17 +48,21 @@ module.exports.login = async(req, res) => {
                 })
                 
                 res.status(200).json({
+                    status: true,
+                    message: 'Connexion Réussie, redirection...',
                     token : token
                 })
 
             } else {
                 res.json({
-                    error: "Email and/or password incorrect"
+                    status: false,
+                    message: "Email and/or password incorrect"
                 })
             }
         } else {
             res.json({
-                error: "Email and/or password incorrect"
+                status: false,
+                message: "Email and/or password incorrect"
             })
         }
     } catch(error) {
@@ -91,4 +97,13 @@ module.exports.update = async (req, res) => {
             error: error
         })
     }
+}
+
+module.exports.logout = (req, res) => {
+    res.cookie("jwt", '', {
+        maxAge: 1,
+    }).send({
+        status : true,
+        message: "Déconnexion réussie...",
+    })
 }

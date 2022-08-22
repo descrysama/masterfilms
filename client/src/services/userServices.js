@@ -1,17 +1,16 @@
 import axios from "axios";
 
-export const Register = async (name, lastname, email, password) => {
+export const Register = async (username, email, password) => {
   let response = await axios({
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
+      "Accept": "application/json",
       "Access-Control-Allow-Origin": "*",
     },
     method: "post",
     url: `${process.env.REACT_APP_API_URL}/register`,
     data: {
-      name: name,
-      lastname: lastname,
+      username: username,
       email: email,
       password: password,
     },
@@ -22,16 +21,16 @@ export const Register = async (name, lastname, email, password) => {
 
 export const Login = async (email, password) => {
   let response = await axios({
-    method: "post",
-    url: `${process.env.REACT_APP_API_URL}/login`,
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json",
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": process.env.REACT_APP_API_URL,
     },
+    method: "post",
+    url: `${process.env.REACT_APP_API_URL}/login`,
     withCredentials: true,
     credentials: 'include',
-    mode: 'cors',
+    cors: true,
     data: {
       email: email,
       password: password,

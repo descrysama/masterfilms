@@ -20,7 +20,7 @@ const Login = () => {
             text: response.data.message
           })
           setTimeout(() => {
-            navigate('/search')
+            navigate('/')
             Swal.close()
           }, 1000)
         } else if (response.data.status === false) {

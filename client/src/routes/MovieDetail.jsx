@@ -23,11 +23,11 @@ const MovieDetail = ({ id }) => {
     <>
       <Navbar />
       <div className="mx-auto md:max-w-[1400px] w-full h-auto flex flex-col justify-center items-center md:p-4">
-        <div className="md:flex">
-            <div className="w-1/2 max-h-1/2">
+        <div className="md:flex md:flex-row md:items-start md:justify-start flex flex-col justify-center items-center">
+            <div className="md:w-1/2 md:max-h-1/2 m-2">
                 <img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/original/${movie.poster_path}`} alt="Sunset in the mountains" className=' ease-in-out duration-300 bg-[#b81e13]'/>
             </div>
-            <div className="w-1/2 justify-center m-3">
+            <div className="md:w-1/2 justify-center m-3">
                 <h1 className="text-3xl m-1 font-bold">{movie.original_title} ({Year})</h1>
                 <p className="m-1">{movie.overview}</p>
                 <ul className="font-bold">
