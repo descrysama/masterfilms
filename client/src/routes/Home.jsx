@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Spinner from '../assets/content/spinloader.gif'
 import * as MovieService from '../services/MovieService'
+import Swal from 'sweetalert2'
 import {AiFillEye, AiFillEyeInvisible, AiFillHeart} from 'react-icons/ai'
 import {BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill} from 'react-icons/bs'
 import { useState } from 'react'
@@ -13,22 +14,59 @@ const Home = ({auth}) => {
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1)
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-right',
+    iconColor: 'green',
+    customClass: {
+      popup: 'colored-toast'
+    },
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true
+  })
 
   useEffect(() => {
     handleSearch(query)
   }, [page, query])
 
+  const getClientFilms = async(resMovies) => {
+    await MovieService.getClientFilms().then(res => {
+      const idArray = []
+      res.data.my_films.map(movie => {
+        idArray.push(parseInt(movie.film_id))
+      })
+      const statusArray = []
+      res.data.my_films.map(movie => {
+        statusArray.push(movie.status)
+      })
+      const statusData = resMovies.map(movie => idArray.includes(movie.id) ? movie = {...movie, gray: 'grayscale(100%)', blur: "blur(1px)"}: {...movie, gray: 'none', blur: 'none'})
+      setMovies(statusData)
+      setLoading(false)
+      
+    })
+  }
+
   const handleSearch = (searchParam) => {
     setQuery(searchParam)
     setLoading(true)
     MovieService.queryFetch(query, page).then(res => {
-      setMovies(res.data.results)
+      getClientFilms(res.data.results)
       setLoading(false)
     })
   }
 
-  const handleAddFilm = (status, poster_path, original_title, title , overview, vote_average, id) => {
-    MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id).then(res => console.log(res))
+  const handleAddFilm = (status, poster_path, original_title, title , overview, vote_average, id, key) => {
+    MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id)
+    const newTab = [...Movies]
+    const newObject = {...newTab[key], gray: 'grayscale(100%)', blur: "blur(1px)"}
+    newTab.splice(key, 1, newObject)
+    setMovies(newTab)
+    console.log(newTab)
+    Toast.fire({
+      icon: 'success',
+      title: 'Success'
+    })
   }
 
   return (
@@ -51,15 +89,15 @@ const Home = ({auth}) => {
               :
               Movies.map((movie, key) => (
                 <div key={key} className='max-w-sm rounded overflow-hidden m-3 flex flex-col justify-center items-center animate__animated animate__fadeIn'>
-                  <a href={"movie/" + movie.id}><img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt="Sunset in the mountains" className='ease-in-out duration-300 bg-[#b81e13] cursor-pointer' /></a>
+                  <a href={"movie/" + movie.id}><img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt="Sunset in the mountains" className='ease-in-out duration-300 bg-[#b81e13] cursor-pointer' style={{filter: (movie.gray + movie.blur)}}/></a>
                   <div className='w-full'>
                   <div className={`h-[25px] mt-2 text-center text-gray-800 text-shad ${movie.vote_average*10 >= 0 && movie.vote_average*10 <= 20 ? "bg-[#b81e13] shadow-md shadow-[#b81e13]" : null} ${movie.vote_average*10 >= 20 && movie.vote_average*10 < 40 ? "bg-[#c46619] shadow-md shadow-[#c46619]" : null} ${movie.vote_average*10 >= 40 && movie.vote_average*10 < 60 ? "bg-[#96c419] shadow-md shadow-[#96c419]" : null} ${movie.vote_average*10 >= 60 && movie.vote_average*10 < 80 ? "bg-[#2dc419] shadow-md shadow-[#2dc419]" : null} ${movie.vote_average*10 >= 80 && movie.vote_average*10 <= 100 ? "bg-[#0fdf0f] shadow-md shadow-[#0fdf0f]" : null}`} style={{width: `${movie.vote_average*10}%`}}>{movie.vote_average*10}%</div>
                     <p className='mt-1 font-bold'>{movie.original_title}</p>
                     <p className='mt-1'>{movie.release_date}</p>
                     {auth == true ?
                     <>
-                      <button onClick={() => handleAddFilm(true, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id)} className='p-3 justify-center bg-[#27a193] rounded-full hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white'><AiFillEye size={18}/></button>
-                      <button onClick={() => handleAddFilm(false, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id)} className='p-3 justify-center bg-[#b92727] rounded-full hover:bg-[#961c1c] ease-in-out duration-300 text-white'><AiFillEyeInvisible size={18}/></button>
+                      <button onClick={() => handleAddFilm(true, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id, key)} className='p-3 justify-center bg-[#27a193] rounded-full hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white'><AiFillEye size={18}/></button>
+                      <button onClick={() => handleAddFilm(false, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id, key)} className='p-3 justify-center bg-[#b92727] rounded-full hover:bg-[#961c1c] ease-in-out duration-300 text-white'><AiFillEyeInvisible size={18}/></button>
                     </>
                     :
                     null
