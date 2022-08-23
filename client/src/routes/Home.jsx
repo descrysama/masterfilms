@@ -34,22 +34,6 @@ const Home = ({auth}) => {
     handleSearch(query)
   }, [page, query])
 
-  // const getClientFilms = async(resMovies) => {
-  //   await MovieService.getClientFilms().then(res => {
-  //     const idArray = []
-  //     res.data.my_films.map(movie => {
-  //       idArray.push(parseInt(movie.film_id))
-  //     })
-  //     const statusArray = []
-  //     res.data.my_films.map(movie => {
-  //       statusArray.push(movie.status)
-  //     })
-  //     const statusData = resMovies.map((movie, key) => idArray.includes(movie.id) ? {...movie, gray: 'grayscale(100%)', blur: "blur(0.9px)"}: {...movie, gray: 'none', blur: 'none'})
-  //     setMovies(statusData)
-  //     setLoading(false)
-      
-  //   })
-  // }
 
   const getClientFilms = async(resMovies) => {
     await MovieService.getClientFilms().then(res => {
@@ -61,8 +45,9 @@ const Home = ({auth}) => {
         newFilms.splice(index, 1, newObject)
         resMovies = newFilms
       })
-      const newFilms = resMovies.map(movie => movie.status == true ? {...movie, gray: 'grayscale(100%)', blur: "blur(0.9px)"} : {...movie, gray: 'none', blur: 'none'})
+      const newFilms = resMovies.map(movie => movie.status == true ? {...movie, gray: true, blur: true} : {...movie, gray: false, blur: false})
       setMovies(newFilms)
+      console.log(newFilms)
       setLoading(false)
     })
   }
@@ -81,12 +66,12 @@ const Home = ({auth}) => {
     MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id).then(() => {
       if(status == true) {
         const newTab = [...Movies]
-        const newObject = {...newTab[key], gray: 'grayscale(100%)', blur: "blur(1px)", status: !newTab[key].status}
+        const newObject = {...newTab[key], gray: true, blur: true, status: !newTab[key].status}
         newTab.splice(key, 1, newObject)
         setMovies(newTab)
       } else {
         const newTab = [...Movies]
-        const newObject = {...newTab[key], gray: "", blur: "none", status: !newTab[key].status}
+        const newObject = {...newTab[key], gray: false, blur: false, status: !newTab[key].status}
         newTab.splice(key, 1, newObject)
         setMovies(newTab)
       }
@@ -115,7 +100,7 @@ const Home = ({auth}) => {
               :
               Movies.map((movie, key) => (
                 <div key={key} className='max-w-sm rounded overflow-hidden m-3 flex flex-col justify-center items-center animate__animated animate__fadeIn'>
-                  <a href={"movie/" + movie.id}><img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt="Sunset in the mountains" className='ease-in-out duration-300 bg-[#b81e13] cursor-pointer' style={{filter: (movie.gray + movie.blur)}}/></a>
+                  <a href={"movie/" + movie.id}><img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt="Sunset in the mountains" className={`ease-in-out duration-300 bg-[#b81e13] cursor-pointer ${movie.gray == true? 'grayscale': null} ${movie.blur == true? 'blur-[1px]': null}`} /></a>
                   <div className='w-full'>
                   <div className={`h-[25px] mt-2 text-center text-gray-800 text-shad ${movie.vote_average*10 >= 0 && movie.vote_average*10 <= 20 ? "bg-[#b81e13] shadow-md shadow-[#b81e13]" : null} ${movie.vote_average*10 >= 20 && movie.vote_average*10 < 40 ? "bg-[#c46619] shadow-md shadow-[#c46619]" : null} ${movie.vote_average*10 >= 40 && movie.vote_average*10 < 60 ? "bg-[#96c419] shadow-md shadow-[#96c419]" : null} ${movie.vote_average*10 >= 60 && movie.vote_average*10 < 80 ? "bg-[#2dc419] shadow-md shadow-[#2dc419]" : null} ${movie.vote_average*10 >= 80 && movie.vote_average*10 <= 100 ? "bg-[#0fdf0f] shadow-md shadow-[#0fdf0f]" : null}`} style={{width: `${movie.vote_average*10}%`}}>{movie.vote_average*10}%</div>
                     <p className='mt-1 font-bold'>{movie.original_title}</p>
