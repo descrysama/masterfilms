@@ -2,8 +2,9 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Spinner from '../assets/content/spinloader.gif'
 import * as MovieService from '../services/MovieService'
-import Swal from 'sweetalert2'
-import {AiFillEye, AiFillEyeInvisible, AiFillHeart} from 'react-icons/ai'
+import { Notyf } from 'notyf';
+import 'notyf/notyf.min.css';
+import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 import {BsFillArrowLeftCircleFill, BsFillArrowRightCircleFill} from 'react-icons/bs'
 import { useState } from 'react'
 import { useEffect } from 'react'
@@ -14,38 +15,58 @@ const Home = ({auth}) => {
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1)
-  const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-right',
-    iconColor: 'green',
-    customClass: {
-      popup: 'colored-toast'
+  const notyf = new Notyf({
+    position: {
+      x: 'left',
+      y: 'top',
     },
-    showConfirmButton: false,
-    timer: 1500,
-    timerProgressBar: true
-  })
+    types: [
+      {
+        type: 'success',
+        background: '#2a9d8f',
+        duration: 2000,
+        dismissible: true
+      }
+    ]
+  });
 
   useEffect(() => {
     handleSearch(query)
   }, [page, query])
 
+  // const getClientFilms = async(resMovies) => {
+  //   await MovieService.getClientFilms().then(res => {
+  //     const idArray = []
+  //     res.data.my_films.map(movie => {
+  //       idArray.push(parseInt(movie.film_id))
+  //     })
+  //     const statusArray = []
+  //     res.data.my_films.map(movie => {
+  //       statusArray.push(movie.status)
+  //     })
+  //     const statusData = resMovies.map((movie, key) => idArray.includes(movie.id) ? {...movie, gray: 'grayscale(100%)', blur: "blur(0.9px)"}: {...movie, gray: 'none', blur: 'none'})
+  //     setMovies(statusData)
+  //     setLoading(false)
+      
+  //   })
+  // }
+
   const getClientFilms = async(resMovies) => {
     await MovieService.getClientFilms().then(res => {
-      const idArray = []
-      res.data.my_films.map(movie => {
-        idArray.push(parseInt(movie.film_id))
+      let myFilms = res.data.my_films;
+      myFilms.forEach((mymovie) => {
+        const index = resMovies.findIndex(movie => mymovie.film_id == movie.id)
+        const newObject = {...resMovies[index], status: mymovie.status}
+        const newFilms = [...resMovies]
+        newFilms.splice(index, 1, newObject)
+        resMovies = newFilms
       })
-      const statusArray = []
-      res.data.my_films.map(movie => {
-        statusArray.push(movie.status)
-      })
-      const statusData = resMovies.map(movie => idArray.includes(movie.id) ? movie = {...movie, gray: 'grayscale(100%)', blur: "blur(1px)"}: {...movie, gray: 'none', blur: 'none'})
-      setMovies(statusData)
+      const newFilms = resMovies.map(movie => movie.status == true ? {...movie, gray: 'grayscale(100%)', blur: "blur(0.9px)"} : {...movie, gray: 'none', blur: 'none'})
+      setMovies(newFilms)
       setLoading(false)
-      
     })
   }
+
 
   const handleSearch = (searchParam) => {
     setQuery(searchParam)
@@ -57,16 +78,21 @@ const Home = ({auth}) => {
   }
 
   const handleAddFilm = (status, poster_path, original_title, title , overview, vote_average, id, key) => {
-    MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id)
-    const newTab = [...Movies]
-    const newObject = {...newTab[key], gray: 'grayscale(100%)', blur: "blur(1px)"}
-    newTab.splice(key, 1, newObject)
-    setMovies(newTab)
-    console.log(newTab)
-    Toast.fire({
-      icon: 'success',
-      title: 'Success'
+    MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id).then(() => {
+      if(status == true) {
+        const newTab = [...Movies]
+        const newObject = {...newTab[key], gray: 'grayscale(100%)', blur: "blur(1px)", status: !newTab[key].status}
+        newTab.splice(key, 1, newObject)
+        setMovies(newTab)
+      } else {
+        const newTab = [...Movies]
+        const newObject = {...newTab[key], gray: "", blur: "none", status: !newTab[key].status}
+        newTab.splice(key, 1, newObject)
+        setMovies(newTab)
+      }
     })
+    
+    notyf.success('Opération réussie');
   }
 
   return (
@@ -96,12 +122,10 @@ const Home = ({auth}) => {
                     <p className='mt-1'>{movie.release_date}</p>
                     {auth == true ?
                     <>
-                      <button onClick={() => handleAddFilm(true, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id, key)} className='p-3 justify-center bg-[#27a193] rounded-full hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white'><AiFillEye size={18}/></button>
-                      <button onClick={() => handleAddFilm(false, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id, key)} className='p-3 justify-center bg-[#b92727] rounded-full hover:bg-[#961c1c] ease-in-out duration-300 text-white'><AiFillEyeInvisible size={18}/></button>
+                      <button disabled={movie.status == true ? true : false} onClick={() => handleAddFilm(true, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id, key)} className={`p-3 justify-center bg-[#27a193] rounded-full hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white ${movie.status == true ? 'disabled:bg-[#676868]': null}`} ><AiFillEye size={18} /></button>
+                      <button disabled={movie.status == false ? true : false} onClick={() => handleAddFilm(false, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id, key)} className={`p-3 justify-center bg-[#b92727] rounded-full hover:bg-[#961c1c] ease-in-out duration-300 text-white ${movie.status == false ? 'disabled:bg-[#676868]': null}`} ><AiFillEyeInvisible size={18} /></button>
                     </>
-                    :
-                    null
-                    }
+                    :null}
                   </div>
                 </div>
               ))}

@@ -5,7 +5,6 @@ import Swal from 'sweetalert2'
 
 const Register = () => {
 
-  const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +48,6 @@ const Register = () => {
   }
 
   const resetFields = () => {
-    setName('')
     setUsername('')
     setEmail('')
     setPassword('')

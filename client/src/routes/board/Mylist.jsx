@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../../components/Navbar'
 import Spinner from '../../assets/content/spinloader.gif'
 import * as MovieService from '../../services/MovieService'
-import {AiFillEye, AiFillEyeInvisible, AiFillHeart} from 'react-icons/ai'
+import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
@@ -10,37 +10,35 @@ const Mylist = () => {
 
   const [Movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
-  const [myMovies, setmyMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getClientFilms = async() => {
     setLoading(true)
     await MovieService.getClientFilms().then(res => {
-      const idArray = []
-      res.data.my_films.map(movie => {
-        idArray.push(movie.film_id)
+      let myFilms = res.data.my_films;
+      let dbFilms = res.data.all_films;
+      myFilms.forEach((mymovie) => {
+        const index = dbFilms.findIndex(movie => mymovie.film_id == movie.id)
+        const newObject = {...dbFilms[index], status: mymovie.status}
+        const newFilms = [...dbFilms]
+        newFilms.splice(index, 1, newObject)
+        dbFilms = newFilms
       })
-      const idData = res.data.all_films.filter(movie => idArray.includes(movie.id))
-      const statusArray = []
-      res.data.my_films.map(movie => {
-        statusArray.push(movie.status)
-      })
-      const statusData = idData.map((movie, key) => movie = {...movie, status: statusArray[key]})
-      setMovies(statusData)
-      setFilteredMovies(statusData)
+      const newFilms = dbFilms.filter(movie => movie.status == true || movie.status == false)
+      setMovies(newFilms)
+      setFilteredMovies(newFilms)
       setLoading(false)
-      
     })
   }
 
   const filterFilms = (filter) => {
     switch(filter) {
       case true:
-        const trueArray = Movies.filter(movie => movie.status == true)
+        const trueArray = Movies.filter(movie => movie.status === true)
         setFilteredMovies(trueArray)
         break;
       case false:
-        const falseArray = Movies.filter(movie => movie.status == false)
+        const falseArray = Movies.filter(movie => movie.status === false)
         setFilteredMovies(falseArray)
         break;
       default: 
@@ -68,21 +66,24 @@ const Mylist = () => {
               {loading === true?
               <img src={Spinner} alt="spinner loading" />
               :
+              filteredMovies.length >= 1 ?
               filteredMovies.map((movie, key) => (
                 <div key={key} className='max-w-sm rounded overflow-hidden m-3 flex flex-col justify-center items-center animate__animated animate__fadeIn'>
                   <a href={"movie/" + movie.id}><img src={movie.poster_path == null ? 'https://via.placeholder.com/300x450' : `https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt={movie.original_title + 'image'} className='ease-in-out duration-300 bg-[#b81e13] cursor-pointer'/></a>
                   <div className='w-full'>
                   <div className={`h-[25px] mt-2 text-center text-gray-800 text-shad ${movie.vote_average*10 >= 0 && movie.vote_average*10 <= 20 ? "bg-[#b81e13] shadow-md shadow-[#b81e13]" : null} ${movie.vote_average*10 >= 20 && movie.vote_average*10 < 40 ? "bg-[#c46619] shadow-md shadow-[#c46619]" : null} ${movie.vote_average*10 >= 40 && movie.vote_average*10 < 60 ? "bg-[#96c419] shadow-md shadow-[#96c419]" : null} ${movie.vote_average*10 >= 60 && movie.vote_average*10 < 80 ? "bg-[#2dc419] shadow-md shadow-[#2dc419]" : null} ${movie.vote_average*10 >= 80 && movie.vote_average*10 <= 100 ? "bg-[#0fdf0f] shadow-md shadow-[#0fdf0f]" : null}`} style={{width: `${movie.vote_average*10}%`}}>{movie.vote_average*10}%</div>
                     <p className='mt-1 font-bold'>{movie.original_title}</p>
+                    <p className='mt-1 font-bold'>{movie.id}</p>
                     <p className='mt-1'>{movie.release_date}</p>
-                    {movie.status == true ? 
+                    {movie.status === true ? 
                     <button className='p-3 justify-center bg-[#27a193] rounded-full ease-in-out duration-300 mr-1 text-white cursor-default'><AiFillEye size={18}/></button>
                      : 
                      <button className='p-3 justify-center bg-[#b92727] rounded-full ease-in-out duration-300 mr-1 text-white cursor-default'><AiFillEyeInvisible size={18}/></button>
                      }
                   </div>
                 </div>
-              ))}
+              )):
+              <p className='m-2 text-xl'>Vous n'avez repertorié aucun film. ajoutez-en dans la page accueil</p>}
             </div>
       </div>
     </>
