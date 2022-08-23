@@ -27,6 +27,10 @@ const Home = ({auth}) => {
     })
   }
 
+  const handleAddFilm = (status, poster_path, original_title, title , overview, vote_average, id) => {
+    MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id).then(res => console.log(res))
+  }
+
   return (
     <>
       <Navbar/>
@@ -54,8 +58,8 @@ const Home = ({auth}) => {
                     <p className='mt-1'>{movie.release_date}</p>
                     {auth == true ?
                     <>
-                      <button onClick={() => setPage(page - 1)} className='p-3 justify-center bg-[#27a193] rounded-full hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white'><AiFillEye size={18}/></button>
-                      <button onClick={() => setPage(page - 1)} className='p-3 justify-center bg-[#b92727] rounded-full hover:bg-[#961c1c] ease-in-out duration-300 text-white'><AiFillEyeInvisible size={18}/></button>
+                      <button onClick={() => handleAddFilm(true, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id)} className='p-3 justify-center bg-[#27a193] rounded-full hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white'><AiFillEye size={18}/></button>
+                      <button onClick={() => handleAddFilm(false, movie.poster_path, movie.original_title, movie.title, movie.overview, movie.vote_average, movie.id)} className='p-3 justify-center bg-[#b92727] rounded-full hover:bg-[#961c1c] ease-in-out duration-300 text-white'><AiFillEyeInvisible size={18}/></button>
                     </>
                     :
                     null

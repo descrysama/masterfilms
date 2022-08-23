@@ -7,7 +7,7 @@ const filmSchema = new Schema({
         required: true,
         unique: true
     },
-    backdrop_path: {
+    poster_path: {
         type: String,
         required: true
     },
