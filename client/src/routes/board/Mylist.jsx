@@ -35,7 +35,6 @@ const Mylist = () => {
             <div className='md:w-1/2 w-[90%] h-[20%] md:flex md:justify-center md:items-center md:flex-col flex flex-col justify-center items-center text-white p-2'>
               <h2 className='text-black text-4xl font-semibold'>Vos Films</h2>
               <div className='flex m-2'>
-                <button onClick={() => setPage(page - 1)} className='p-3 flex items-center justify-center bg-[#a1278d] rounded hover:bg-[#931e97] ease-in-out duration-300 mr-1 text-white'><AiFillHeart size={18}/>A voir</button>
                 <button onClick={() => setPage(page - 1)} className='p-3 flex items-center justify-center bg-[#27a193] rounded hover:bg-[#1e746a] ease-in-out duration-300 mr-1 text-white'><AiFillEye size={18}/>Visionnés</button>
                 <button onClick={() => setPage(page - 1)} className='p-3 flex items-center justify-center bg-[#b92727] rounded hover:bg-[#961c1c] ease-in-out duration-300 text-white'><AiFillEyeInvisible size={18}/>Pas Visionnés</button>
               </div>
