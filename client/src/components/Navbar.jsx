@@ -21,7 +21,9 @@ const Navbar = () => {
       method: "post",
       url: `${process.env.REACT_APP_API_URL}/logout`,
       withCredentials: true,
-    }).then(() => navigate("/login"));
+    }).then(() => {
+      window.location.reload()
+    });
   }
 
 
@@ -44,7 +46,7 @@ const Navbar = () => {
           {auth ? 
           <>
             <Link to="/mylist" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Mes Films</Link> 
-            <Link to="/search" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Swiper</Link>
+            <Link to="/swipe" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Swiper</Link>
           </>
           : 
           null}
@@ -68,7 +70,7 @@ const Navbar = () => {
             {auth ? 
             <>
               <Link to="/mylist" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Mes films</Link> 
-              <Link to="/search" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Swiper</Link>
+              <Link to="/swipe" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Swiper</Link>
               <div className=' m-2 flex cursor-pointer md:hidden p-3 bg-[#2a9d8f] rounded-xl hover:bg-[#238176] ease-in-out duration-300 text-white' onClick={() => handleLogout()}>
                 Deconnexion <AiOutlineLogout size={25}/>
               </div>

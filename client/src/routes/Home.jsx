@@ -57,7 +57,11 @@ const Home = ({auth}) => {
     setQuery(searchParam)
     setLoading(true)
     MovieService.queryFetch(query, page).then(res => {
-      getClientFilms(res.data.results)
+      if(auth == true) {
+        getClientFilms(res.data.results)
+      } else {
+        setMovies(res.data.results)
+      }
       setLoading(false)
     })
   }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import * as userService from '../../services/userServices';
 import Swal from 'sweetalert2'
 
@@ -7,7 +7,6 @@ const Login = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,7 +19,7 @@ const Login = () => {
             text: response.data.message
           })
           setTimeout(() => {
-            navigate('/')
+            window.location.reload()
             Swal.close()
           }, 1000)
         } else if (response.data.status === false) {

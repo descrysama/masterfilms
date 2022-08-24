@@ -27,9 +27,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home auth={auth}/>} />
         <Route path="/login" element={<ProtectLogin><Login/></ProtectLogin>} />
-        <Route path="/register" element={<Register/>} />
+        <Route path="/register" element={<ProtectLogin><Register/></ProtectLogin>} />
         <Route path="/movie/:id" element={<MovieDetail/>} />
-        <Route path="/mylist" element={<Mylist/>} />
+        <Route path="/mylist" element={<ProtectRoute><Mylist/></ProtectRoute>} />
       </Routes>
     </BrowserRouter>
   );
