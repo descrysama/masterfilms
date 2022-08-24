@@ -66,12 +66,12 @@ const Home = ({auth}) => {
     MovieService.addFilm(status, poster_path, original_title, title , overview, vote_average, id).then(() => {
       if(status == true) {
         const newTab = [...Movies]
-        const newObject = {...newTab[key], gray: true, blur: true, status: !newTab[key].status}
+        const newObject = {...newTab[key], gray: true, blur: true, status: true}
         newTab.splice(key, 1, newObject)
         setMovies(newTab)
       } else {
         const newTab = [...Movies]
-        const newObject = {...newTab[key], gray: false, blur: false, status: !newTab[key].status}
+        const newObject = {...newTab[key], gray: false, blur: false, status: false}
         newTab.splice(key, 1, newObject)
         setMovies(newTab)
       }

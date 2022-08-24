@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar'
 import Spinner from '../../assets/content/spinloader.gif'
 import * as MovieService from '../../services/MovieService'
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
+import {BsTrashFill} from 'react-icons/bs'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
@@ -28,6 +29,17 @@ const Mylist = () => {
       setMovies(newFilms)
       setFilteredMovies(newFilms)
       setLoading(false)
+    })
+  }
+
+  const handleDestroy = (id, key) => {
+    MovieService.destroyFilm(id).then(() => {
+      const newMovies = [...Movies]
+      const newFilteredMovies = [...filteredMovies]
+      newMovies.splice(key, 1)
+      newFilteredMovies.splice(key, 1)
+      setFilteredMovies(newFilteredMovies)
+      setMovies(newMovies)
     })
   }
 
@@ -76,9 +88,15 @@ const Mylist = () => {
                     <p className='mt-1 font-bold'>{movie.id}</p>
                     <p className='mt-1'>{movie.release_date}</p>
                     {movie.status === true ? 
-                    <button className='p-3 justify-center bg-[#27a193] rounded-full ease-in-out duration-300 mr-1 text-white cursor-default'><AiFillEye size={18}/></button>
+                    <>
+                      <button className='p-3 justify-center bg-[#27a193] rounded-full ease-in-out duration-300 mr-1 text-white cursor-default'><AiFillEye size={18}/></button>
+                      <button onClick={() => handleDestroy(movie.id, key)} className='p-3 justify-center bg-[#db1616] rounded-full ease-in-out duration-300 mr-1 text-white'><BsTrashFill size={18}/></button>
+                    </>
                      : 
-                     <button className='p-3 justify-center bg-[#b92727] rounded-full ease-in-out duration-300 mr-1 text-white cursor-default'><AiFillEyeInvisible size={18}/></button>
+                    <>
+                      <button className='p-3 justify-center bg-[#af1414] hover:bg-[#a51111] rounded-full ease-in-out duration-300 mr-1 text-white cursor-default'><AiFillEyeInvisible size={18}/></button>
+                      <button onClick={() => handleDestroy(movie.id, key)} className='p-3 justify-center bg-[#db1616] hover:bg-[#a51111] rounded-full ease-in-out duration-300 mr-1 text-white'><BsTrashFill size={18}/></button>
+                    </>
                      }
                   </div>
                 </div>

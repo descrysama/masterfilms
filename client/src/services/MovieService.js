@@ -65,3 +65,21 @@ export const addFilm = async(status, poster_path, original_title, title , overvi
 
     return response;
 }
+
+export const destroyFilm = async(id) => {
+    let response = await axios({
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Access-Control-Allow-Origin": "*",
+        },
+        data: {
+            id: id
+        },
+        withCredentials: true,
+        method: "post",
+        url: `${process.env.REACT_APP_API_URL}/destroy`
+})
+
+return response;
+}
