@@ -16,6 +16,10 @@ module.exports.create = async(req, res) => {
                         user_id: user_id,
                         status: status
                     })
+                } else {
+                    if(checkUserFilm[0].status != status) {
+                        await UserFilm.updateOne({_id: checkUserFilm[0]._id}, {status: status})
+                    }
                 }
 
                 await Film.create({
@@ -37,6 +41,43 @@ module.exports.create = async(req, res) => {
                     error: err,
                     status: false,
                     message: "Film ajouté a vos favoris."
+                })
+            }
+        } else {
+            res.cookie("jwt", '', {
+                maxAge: 1,
+            }).send({
+                status : true,
+                message: "Erreur : suppression du cookie",
+            })
+            res.json({
+                error: "no token provided or wrong token"
+            })
+        }
+    } else {
+        res.json({
+            error: 'no token provided'
+        })
+    }
+}
+
+module.exports.destroy = async (req, res) => {
+    if (req.cookies.jwt) {
+        const {id} = req.body
+        const user_id = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET)
+        if (user_id) {
+            try {
+                await UserFilm.findOneAndDelete({film_id: id, user_id: user_id})
+                res.json({
+                    status: true,
+                    message: "Film bien supprimé."
+                })
+                
+            } catch(err) {
+                res.json({
+                    error: err,
+                    status: false,
+                    message: "Erreur."
                 })
             }
         } else {
