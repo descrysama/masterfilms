@@ -117,7 +117,6 @@ const Mylist = () => {
         } else if (filterTrue == true && filterFalse == null) {
           setMapMovies(newSeen)
         } else if (filterTrue == null && filterFalse == false) {
-          newUnseen.splice(unseenIndex, 1)
           setMapMovies(newUnseen)
         }
       } else if (status == false) {
