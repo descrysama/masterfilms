@@ -8,11 +8,6 @@ router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/update', Middle.authToken, userController.update);
 router.post('/logout', userController.logout)
-
-
-
-
-router.post('/create', filmController.create);
 router.post('/checktoken', userController.checkToken);
 
 module.exports = router;

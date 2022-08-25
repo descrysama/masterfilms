@@ -47,7 +47,6 @@ const Home = ({auth}) => {
       })
       const newFilms = resMovies.map(movie => movie.status == true ? {...movie, gray: true, blur: true} : {...movie, gray: false, blur: false})
       setMovies(newFilms)
-      console.log(newFilms)
       setLoading(false)
     })
   }
@@ -80,7 +79,6 @@ const Home = ({auth}) => {
         setMovies(newTab)
       }
     })
-    
     notyf.success('Opération réussie');
   }
 
