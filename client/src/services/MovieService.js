@@ -79,7 +79,8 @@ export const destroyFilm = async(id) => {
         withCredentials: true,
         method: "post",
         url: `${process.env.REACT_APP_API_URL}/destroy`
-})
+    })
 
-return response;
+    return response;
 }
+

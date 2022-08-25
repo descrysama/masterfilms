@@ -11,6 +11,7 @@ import { useCookies } from 'react-cookie';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectLogin from './middleware/ProtectLogin';
 import ProtectRoute from './middleware/ProtectRoute';
+import Swipe from './routes/board/Swipe';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
         <Route path="/register" element={<ProtectLogin><Register/></ProtectLogin>} />
         <Route path="/movie/:id" element={<MovieDetail/>} />
         <Route path="/mylist" element={<ProtectRoute><Mylist/></ProtectRoute>} />
+        <Route path="/swipe" element={<ProtectRoute><Swipe/></ProtectRoute>} />
       </Routes>
     </BrowserRouter>
   );
