@@ -1,5 +1,6 @@
 const Film = require('../models/filmModel');
 const UserFilm = require('../models/userFilmModel');
+const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 
 module.exports.create = async(req, res) => {
@@ -98,7 +99,6 @@ module.exports.destroy = async (req, res) => {
     }
 }
 
-
 module.exports.getmyfilms = async (req, res) => {
     if (req.cookies.jwt) {
         const user_id = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET)
@@ -108,6 +108,39 @@ module.exports.getmyfilms = async (req, res) => {
             res.json({
                 all_films: all_films,
                 my_films: my_films
+            })
+        }
+    } else {
+        res.json({
+            error: 'no token provided'
+        })
+    }
+    
+}
+
+module.exports.getuserfilms = async (req, res) => {
+    if (req.cookies.jwt) {
+        const user = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET)
+        const id = req.body.id
+        if(user) {
+            const user_films_id = []
+            const films_id = await UserFilm.find({user_id: id})
+            films_id.forEach((e) => user_films_id.push(e.film_id))
+            const user_films = await UserFilm.find({user_id: id})
+            const all_films = await Film.find({})
+            const new_all_films = all_films.filter(film => user_films_id.includes(film.id))
+            const final_list = []
+            new_all_films.forEach((film) => {
+                const index = user_films_id.indexOf(film.id)
+                newObject = {...film._doc, status: user_films[index].status}
+                final_list.push(newObject)
+            })
+            
+            const user = await User.find({_id: id}).select({_id: 1, username: 1})
+
+            res.json({
+                username: user[0].username,
+                movies: final_list
             })
         }
     } else {

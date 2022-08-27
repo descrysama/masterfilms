@@ -141,6 +141,35 @@ module.exports.index = async (req, res) => {
             })
         }
 
+    } else {
+        res.json({
+            error: "no cookie"
+        })
+    }
+}
+
+module.exports.singleuser = async (req, res) => {
+    if(req.cookies.jwt) {
+        const id = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+        const userid = req.body.id
+        const user = await User.find({_id: userid}).select({_id: 1, username: 1})
+        if(id) {
+            res.json({
+                user: user
+            })
+        } else {
+            res.cookie("jwt", '', {
+                maxAge: 1,
+            })
+            res.json({
+                error: 'invalid token'
+            })
+        }
+
+    } else {
+        res.json({
+            error: "no cookie"
+        })
     }
 }
 

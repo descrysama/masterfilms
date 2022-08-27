@@ -45,7 +45,24 @@ export const getUsers = async() => {
     headers: {
       "Content-Type":"application/json"
     },
+    method: 'get',
     url: `${process.env.REACT_APP_API_URL}/getusers`,
+    withCredentials: true
+  })
+
+  return response;
+}
+
+export const getSingleUser = async(id) => {
+  let response = await axios({
+    headers: {
+      "Content-Type":"application/json"
+    },
+    data : {
+      id: id
+    },
+    method: 'post',
+    url: `${process.env.REACT_APP_API_URL}/singleuser`,
     withCredentials: true
   })
 

@@ -7,8 +7,9 @@ const Middle = require('../middlewares/authenticateToken')
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/update', Middle.authToken, userController.update);
-router.post('/logout', userController.logout)
+router.post('/logout', userController.logout);
 router.post('/checktoken', userController.checkToken);
-router.get('/getusers', userController.index)
+router.get('/getusers', userController.index);
+router.post('/singleuser', userController.singleuser);
 
 module.exports = router;
