@@ -84,3 +84,7 @@ export const destroyFilm = async(id) => {
     return response;
 }
 
+export const swipeFetcher = async(array) => {
+    console.log(array)
+}
+

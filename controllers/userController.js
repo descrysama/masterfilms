@@ -123,6 +123,27 @@ module.exports.update = async (req, res) => {
     }
 }
 
+module.exports.index = async (req, res) => {
+    if(req.cookies.jwt) {
+        const id = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+        const user = await User.find({_id: id})
+        if(user) {
+            const users = await User.find().select({_id: 1, username: 1})
+            res.json({
+                users: users
+            })
+        } else {
+            res.cookie("jwt", '', {
+                maxAge: 1,
+            })
+            res.json({
+                error: 'invalid token'
+            })
+        }
+
+    }
+}
+
 module.exports.logout = (req, res) => {
     res.cookie("jwt", '', {
         maxAge: 1,

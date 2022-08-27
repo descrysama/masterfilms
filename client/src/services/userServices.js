@@ -39,3 +39,15 @@ export const Login = async (email, password) => {
 
   return response;
 };
+
+export const getUsers = async() => {
+  let response = await axios({
+    headers: {
+      "Content-Type":"application/json"
+    },
+    url: `${process.env.REACT_APP_API_URL}/getusers`,
+    withCredentials: true
+  })
+
+  return response;
+}

@@ -3,12 +3,14 @@ import axios from 'axios'
 import * as AuthChecker from '../middleware/authChecker'
 import { useCookies } from 'react-cookie';
 import { Link, useNavigate } from 'react-router-dom'
+import Spinner from '../assets/content/spinloader.gif'
 import {AiOutlineMenu, AiOutlineClose, AiOutlineLogout} from 'react-icons/ai'
 import { useEffect } from 'react'
 
 const Navbar = () => {
 
   const [auth, setAuth] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [nav, setNav] = useState(false)
   const token = useCookies(["jwt"]);
   const navigate = useNavigate();
@@ -29,7 +31,10 @@ const Navbar = () => {
 
 
   useEffect(() => {
-    AuthChecker.AuthChecker(token).then(res => setAuth(res.data.status))
+    AuthChecker.AuthChecker(token).then(res => {
+      setLoading(false)
+      setAuth(res.data.status)
+    })
   })
 
 
@@ -38,6 +43,9 @@ const Navbar = () => {
   }
 
   return (
+    loading == true ?
+    <img src={Spinner} alt="spinner loading" />
+    :
     <header>
       <nav className='flex justify-end md:justify-around p-4 items-center h-24 text-black mx-auto max-w-[1240px] truncate'>
         <Link className='w-full text-3xl font-bold text-[#2a9d8f]' to='/'>MasterFilms.</Link>
@@ -46,7 +54,7 @@ const Navbar = () => {
           {auth ? 
           <>
             <Link to="/mylist" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Mes Films</Link> 
-            <Link to="/swipe" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Swiper</Link>
+            <Link to="/users" className='p-3 hover:text-[#2a9d8f] hover:border-b border-[#2a9d8f] cursor-pointer'>Utilisateurs</Link>
           </>
           : 
           null}
@@ -83,6 +91,7 @@ const Navbar = () => {
         </div>
       </nav>
     </header>
+    
   )
 }
 

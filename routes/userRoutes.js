@@ -9,5 +9,6 @@ router.post('/login', userController.login);
 router.post('/update', Middle.authToken, userController.update);
 router.post('/logout', userController.logout)
 router.post('/checktoken', userController.checkToken);
+router.get('/getusers', userController.index)
 
 module.exports = router;
